@@ -68,3 +68,54 @@
             beq $t0, 32, recursion
             beq $t1, 5, isTooLong
             j stringLength
+toDecimal:
+    addi $sp, $sp, -8 #allocating memory for stack
+    sw $ra, 0($sp) #storing return address
+    sw $s3, 4($sp) #storing s register so it is not overwritten
+    beq $a1, $0, return_zero #base case
+    addi $a1, $a1, -1 #length - 1, so to start at end of string
+    add $t0, $a0, $a1 #getting address of the last byte 
+    lb $s3, 0($t0)  #loading the byte ^
+
+    #asciiConversions:
+            blt $s3, 48, isInvalid #if char is before 0 in ascii table, the input is invalid
+            blt $s3, 58, number
+            blt $s3, 65, isInvalid
+            blt $s3, 87, upperCase
+            blt $s3, 97, isInvalid
+            blt $s3, 118, lowerCase
+            blt $s3, 128, isInvalid
+
+        upperCase:
+            addi $s3, $s3, -55
+            jal More
+
+        lowerCase:
+            addi $s3, $s3, -87
+            jal More
+
+        number:
+            addi $s3, $s3, -48
+            jal More
+    #mul $s3, $s3, $a2 #multiplying the byte x the exponentiated base (starts at 1(35^0 = 1))
+    #mul $a2, $a2, 35 #multiplying the exoonentiated base by 35 to get next power (35^1 ...)
+    More:
+        mul $s3, $s3, $a2 #multiplying the byte x the exponentiated base (starts at 1(35^0 = 1))
+        mul $a2, $a2, 32 #multiplying the exponentiated base by 35 to get next power (35^1 ...)
+        jal toDecimal
+    # a0=str addr, a1=strlen, a2=exponentiated base
+    
+    #jal toDecimal #call function again (loop)
+        add $v0, $s3, $v0   #returning last byte plus decimal version of the rest of number
+        lw $ra, 0($sp)      
+        lw $s3, 4($sp)
+        addi $sp, $sp, 8
+        jr $ra
+return_zero:
+    li $v0, 0
+    lw $ra, 0($sp)
+    lw $s3, 4($sp)
+    addi $sp, $sp, 8
+    jr $ra
+   li $v0, 10
+    syscall
