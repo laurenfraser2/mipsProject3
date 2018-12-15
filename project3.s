@@ -59,12 +59,12 @@
             beq $t0, 32, continue
         addi $t2, $t2, -1
         
- stringLength:
+  stringLength:
             lb $t0, ($t2)
             addi $t2, $t2, 1
             addi $t1, $t1, 1
-            beq $t0, 10, callconversionfunc
-            beq $t0, 0, callconversionfunc
-            beq $t0, 32, callconversionfunc
+            beq $t0, 10, recursion
+            beq $t0, 0, recursion
+            beq $t0, 32, recursion
             beq $t1, 5, isTooLong
             j stringLength
