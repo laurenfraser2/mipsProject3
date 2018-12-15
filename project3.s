@@ -52,3 +52,9 @@
         goToBeg:
             sub $t2, $t2, $t1 #goToBeg the pointer
             la $t1, 0 # counter restart
+            
+            continue:
+            lb $t0, 0($t2)
+            addi $t2, $t2, 1
+            beq $t0, 32, continue
+        addi $t2, $t2, -1
