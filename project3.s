@@ -49,3 +49,6 @@
             beq $t0, 0, goToBeg
             bne $t0, 32, isInvalid #jump to isInvalid branch if not equal
             j leftover
+        goToBeg:
+            sub $t2, $t2, $t1 #goToBeg the pointer
+            la $t1, 0 # counter restart
