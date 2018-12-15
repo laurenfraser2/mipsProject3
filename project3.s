@@ -58,3 +58,9 @@
             addi $t2, $t2, 1
             beq $t0, 32, continue
         addi $t2, $t2, -1
+        
+ stringLength:
+            lb $t0, ($t2)
+            addi $t2, $t2, 1
+            addi $t1, $t1, 1
+            beq $t0, 10, callconversionfunc
